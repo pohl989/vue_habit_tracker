@@ -64,6 +64,25 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA68bpiiQ_tZT9TJG2na0HkKZjtvKz1tGc",
+  authDomain: "chico-habit-tracker.firebaseapp.com",
+  databaseURL: "https://chico-habit-tracker.firebaseio.com",
+  projectId: "chico-habit-tracker",
+  storageBucket: "",
+  messagingSenderId: "774533492669",
+  appId: "1:774533492669:web:d5d2266f88fb95b8"
+};
+
+const myFire = firebase.initializeApp(firebaseConfig);
+const database = myFire.database();
+
+const habits = database
+  .ref("habits")
+  .on("value", snapshot => console.log(snapshot.val()));
+
 export default {
   props: {
     source: String
