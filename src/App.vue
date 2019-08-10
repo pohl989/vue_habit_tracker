@@ -36,44 +36,21 @@
             </li>
           </ul>
           <hr />
-          <!-- New Message -->
+        </v-layout>
+        <v-layout align-center justify-center>
           <form @submit.prevent="storeHabit">
             <h2>New Habit</h2>
-            <div class="form-group">
-              <label>Description:</label>
-              <textarea v-model="description" class="form-control"></textarea>
+            <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
+            <v-textarea
+              v-model="description"
+              label="Description"
+              data-vv-name="description"
+              required
+            ></v-textarea>
+            <div class="my-2">
+              <v-btn color="error" dark large type="submit">Submit</v-btn>
             </div>
-            <div class="form-group">
-              <label>Title:</label>
-              <input v-model="title" class="form-control" />
-            </div>
-            <button class="btn btn-primary">Submit</button>
           </form>
-
-          <!-- <v-flex shrink>
-            <v-tooltip right>
-              <template v-slot:activator="{ on }">
-                <v-btn :href="source" icon large target="_blank" v-on="on">
-                  <v-icon large>mdi-code-tags</v-icon>
-                </v-btn>
-              </template>
-              <span>Source</span>
-            </v-tooltip>
-            <v-tooltip right>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  icon
-                  large
-                  href="https://codepen.io/johnjleider/pen/bXNzZL"
-                  target="_blank"
-                  v-on="on"
-                >
-                  <v-icon large>mdi-codepen</v-icon>
-                </v-btn>
-              </template>
-              <span>Codepen</span>
-            </v-tooltip>
-          </v-flex>-->
         </v-layout>
       </v-container>
     </v-content>
