@@ -30,11 +30,26 @@
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <ul id="example-1">
-            <li v-for="habbit in habbits" v-bind:key="habbit.id">
-              <h2>{{ habbit.title }}</h2>
-              <p>{{habbit.description}}</p>
+            <li v-for="habit in habits" v-bind:key="habit.id">
+              <h2>{{ habit.title }}</h2>
+              <p>{{habit.description}}</p>
             </li>
           </ul>
+          <hr />
+          <!-- New Message -->
+          <form @submit.prevent="storeHabit">
+            <h2>New Habit</h2>
+            <div class="form-group">
+              <label>Description:</label>
+              <textarea v-model="description" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Title:</label>
+              <input v-model="title" class="form-control" />
+            </div>
+            <button class="btn btn-primary">Submit</button>
+          </form>
+
           <!-- <v-flex shrink>
             <v-tooltip right>
               <template v-slot:activator="{ on }">
@@ -91,13 +106,24 @@ export default {
   },
   data: () => ({
     drawer: null,
-    habbits: []
+    title: "",
+    description: "",
+    habits: []
   }),
+  methods: {
+    storeHabit() {
+      database
+        .ref("habits")
+        .push({ title: this.title, description: this.description });
+      this.title = "";
+      this.description = "";
+    }
+  },
   created() {
     this.$vuetify.theme.dark = true;
     database
       .ref("habits")
-      .on("child_added", snapshot => this.habbits.push(snapshot.val()));
+      .on("child_added", snapshot => this.habits.push(snapshot.val()));
   }
 };
 </script>
