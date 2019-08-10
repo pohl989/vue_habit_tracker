@@ -29,7 +29,13 @@
     <v-content>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
-          <v-flex shrink>
+          <ul id="example-1">
+            <li v-for="habbit in habbits" v-bind:key="habbit.id">
+              <h2>{{ habbit.title }}</h2>
+              <p>{{habbit.description}}</p>
+            </li>
+          </ul>
+          <!-- <v-flex shrink>
             <v-tooltip right>
               <template v-slot:activator="{ on }">
                 <v-btn :href="source" icon large target="_blank" v-on="on">
@@ -52,7 +58,7 @@
               </template>
               <span>Codepen</span>
             </v-tooltip>
-          </v-flex>
+          </v-flex>-->
         </v-layout>
       </v-container>
     </v-content>
@@ -79,19 +85,19 @@ const firebaseConfig = {
 const myFire = firebase.initializeApp(firebaseConfig);
 const database = myFire.database();
 
-const habits = database
-  .ref("habits")
-  .on("value", snapshot => console.log(snapshot.val()));
-
 export default {
   props: {
     source: String
   },
   data: () => ({
-    drawer: null
+    drawer: null,
+    habbits: []
   }),
   created() {
     this.$vuetify.theme.dark = true;
+    database
+      .ref("habits")
+      .on("child_added", snapshot => this.habbits.push(snapshot.val()));
   }
 };
 </script>
