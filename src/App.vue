@@ -35,7 +35,6 @@
               <p>{{habit.description}}</p>
             </li>
           </ul>
-          <hr />
         </v-layout>
         <v-layout align-center justify-center>
           <form @submit.prevent="storeHabit">
@@ -63,20 +62,17 @@
 
 <script>
 import firebase from "firebase";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyA68bpiiQ_tZT9TJG2na0HkKZjtvKz1tGc",
-  authDomain: "chico-habit-tracker.firebaseapp.com",
-  databaseURL: "https://chico-habit-tracker.firebaseio.com",
-  projectId: "chico-habit-tracker",
-  storageBucket: "",
-  messagingSenderId: "774533492669",
-  appId: "1:774533492669:web:d5d2266f88fb95b8"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATA_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID
 };
-
 const myFire = firebase.initializeApp(firebaseConfig);
 const database = myFire.database();
-
 export default {
   props: {
     source: String
