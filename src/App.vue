@@ -27,29 +27,56 @@
     </v-app-bar>
 
     <v-content>
-      <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <ul id="example-1">
-            <li v-for="habit in habits" v-bind:key="habit.id">
-              <h2>{{ habit.title }}</h2>
-              <p>{{habit.description}}</p>
-            </li>
-          </ul>
-        </v-layout>
-        <v-layout align-center justify-center>
-          <form @submit.prevent="storeHabit">
-            <h2>New Habit</h2>
-            <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
-            <v-textarea
-              v-model="description"
-              label="Description"
-              data-vv-name="description"
-              required
-            ></v-textarea>
-            <div class="my-2">
-              <v-btn color="error" dark large type="submit">Submit</v-btn>
-            </div>
-          </form>
+      <v-container class="pa-2" fluid grid-list-mdt>
+        <v-layout column>
+          <v-flex>
+            <v-card v-if="!editingHabit" color="purple lighten-4">
+              <v-list-item three-line>
+                <form @submit.prevent="storeHabit">
+                  <h2>New Habit</h2>
+                  <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
+                  <v-text-field
+                    v-model="description"
+                    label="Description"
+                    data-vv-name="description"
+                    required
+                  ></v-text-field>
+                  <div class="my-2">
+                    <v-btn color="error" dark large type="submit">Submit</v-btn>
+                  </div>
+                </form>
+              </v-list-item>
+            </v-card>
+          </v-flex>
+          <v-flex v-for="habit in habits" v-bind:key="habit.id">
+            <v-card dark>
+              <v-list-item one-line>
+                <v-list-item-content v-if="habit !== editingHabit" class="align-self-start">
+                  <v-list-item-title class="headline" v-text="habit.title"></v-list-item-title>
+                  <p>{{habit.description}}</p>
+                  <a @click.prevent="deleteHabit(habit)" href="#" class="card-link">Delete</a>
+                  <a @click.prevent="editHabit(habit)" href="#" class="card-link">Edit</a>
+                </v-list-item-content>
+                <v-list-item-content v-else class="align-self-start">
+                  <form @submit.prevent="storeHabit">
+                    <h2>Edit Habit</h2>
+                    <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
+                    <v-text-field
+                      v-model="description"
+                      label="Description"
+                      data-vv-name="description"
+                      required
+                    ></v-text-field>
+                    <div class="my-2">
+                      <a @click.prevent="cancelEditing" href="#" class="card-link">Cancel</a>
+                      <a @click.prevent="updateHabit" href="#" class="card-link">Update</a>
+                      <!-- <v-btn color="error" dark large type="Save">Submit</v-btn> -->
+                    </div>
+                  </form>
+                </v-list-item-content>
+              </v-list-item>
+            </v-card>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-content>
@@ -73,6 +100,7 @@ const firebaseConfig = {
 };
 const myFire = firebase.initializeApp(firebaseConfig);
 const database = myFire.database();
+const habitsRef = database.ref("habits");
 export default {
   props: {
     source: String
@@ -81,22 +109,50 @@ export default {
     drawer: null,
     title: "",
     description: "",
-    habits: []
+    habits: [],
+    editingHabit: null
   }),
   methods: {
     storeHabit() {
-      database
-        .ref("habits")
-        .push({ title: this.title, description: this.description });
+      habitsRef.push({ title: this.title, description: this.description });
       this.title = "";
       this.description = "";
+    },
+    deleteHabit(habit) {
+      habitsRef.child(habit.id).remove();
+    },
+    editHabit(habit) {
+      this.editingHabit = habit;
+      this.title = habit.title;
+      this.description = habit.description;
+    },
+    updateHabit() {
+      habitsRef
+        .child(this.editingHabit.id)
+        .update({ title: this.title, description: this.description });
+      this.cancelEditing();
+    },
+    cancelEditing() {
+      this.editingHabit = null;
+      this.title = null;
+      this.description = null;
     }
   },
   created() {
     this.$vuetify.theme.dark = true;
-    database
-      .ref("habits")
-      .on("child_added", snapshot => this.habits.push(snapshot.val()));
+    habitsRef.on("child_added", snapshot =>
+      this.habits.push({ ...snapshot.val(), id: snapshot.key })
+    );
+    habitsRef.on("child_removed", snapshot => {
+      const deletedHabit = this.habits.find(habit => habit.id === snapshot.key);
+      const index = this.habits.indexOf(deletedHabit);
+      this.habits.splice(index, 1);
+    });
+    habitsRef.on("child_changed", snapshot => {
+      const updatedHabit = this.habits.find(habit => habit.id === snapshot.key);
+      updatedHabit.title = snapshot.val().title;
+      updatedHabit.description = snapshot.val().description;
+    });
   }
 };
 </script>
