@@ -33,17 +33,17 @@
                   <v-list-item-content v-if="habit !== editingHabit" class="align-self-start">
                     <v-row>
                       <v-col cols="12" sm="1" md="1">
-                        <v-btn text icon color="yellow">
-                          <v-icon>mdi-star</v-icon>
+                        <v-btn text icon color="green">
+                          <v-icon>mdi-check-bold</v-icon>
                         </v-btn>
-                        <v-btn text icon color="indigo">
-                          <v-icon>mdi-star</v-icon>
+                        <v-btn text icon color="deep-purple">
+                          <v-icon>mdi-check-bold</v-icon>
                         </v-btn>
-                        <v-btn text icon color="indigo">
-                          <v-icon>mdi-star</v-icon>
+                        <v-btn text icon color="green">
+                          <v-icon>mdi-check-bold</v-icon>
                         </v-btn>
-                        <v-btn text icon color="yellow">
-                          <v-icon>mdi-star</v-icon>
+                        <v-btn text icon color="deep-purple">
+                          <v-icon>mdi-check-bold</v-icon>
                         </v-btn>
                       </v-col>
                     </v-row>
