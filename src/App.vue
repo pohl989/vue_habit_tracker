@@ -1,28 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list dense>
-        <v-list-item @click>
-          <v-list-item-action>
-            <v-icon>dashboard</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item @click>
-          <v-list-item-action>
-            <v-icon>settings</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Settings</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
     <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Habit Tracker</v-toolbar-title>
     </v-app-bar>
 
@@ -49,41 +27,70 @@
             </v-card>
           </v-flex>
           <v-flex v-for="habit in habits" v-bind:key="habit.id">
-            <v-card dark>
-              <v-list-item one-line>
-                <v-list-item-content v-if="habit !== editingHabit" class="align-self-start">
-                  <v-list-item-title class="headline" v-text="habit.title"></v-list-item-title>
-                  <p>{{habit.description}}</p>
-                  <a @click.prevent="deleteHabit(habit)" href="#" class="card-link">Delete</a>
-                  <a @click.prevent="editHabit(habit)" href="#" class="card-link">Edit</a>
-                </v-list-item-content>
-                <v-list-item-content v-else class="align-self-start">
-                  <form @submit.prevent="storeHabit">
-                    <h2>Edit Habit</h2>
-                    <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
-                    <v-text-field
-                      v-model="description"
-                      label="Description"
-                      data-vv-name="description"
-                      required
-                    ></v-text-field>
-                    <div class="my-2">
-                      <a @click.prevent="cancelEditing" href="#" class="card-link">Cancel</a>
-                      <a @click.prevent="updateHabit" href="#" class="card-link">Update</a>
-                      <!-- <v-btn color="error" dark large type="Save">Submit</v-btn> -->
-                    </div>
-                  </form>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
+            <div style="margin: 2px">
+              <v-card dark tile>
+                <v-list-item one-line>
+                  <v-list-item-content v-if="habit !== editingHabit" class="align-self-start">
+                    <v-row>
+                      <v-col cols="12" sm="1" md="1">
+                        <v-btn text icon color="yellow">
+                          <v-icon>mdi-star</v-icon>
+                        </v-btn>
+                        <v-btn text icon color="indigo">
+                          <v-icon>mdi-star</v-icon>
+                        </v-btn>
+                        <v-btn text icon color="indigo">
+                          <v-icon>mdi-star</v-icon>
+                        </v-btn>
+                        <v-btn text icon color="yellow">
+                          <v-icon>mdi-star</v-icon>
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                    <v-list-item-title class="headline" v-text="habit.title"></v-list-item-title>
+                    <p>{{habit.description}}</p>
+                    <a @click.prevent="deleteHabit(habit)" href="#" class="card-link">Delete</a>
+                    <a @click.prevent="editHabit(habit)" href="#" class="card-link">Edit</a>
+                  </v-list-item-content>
+                  <v-list-item-content v-else class="align-self-start">
+                    <form @submit.prevent="storeHabit">
+                      <h2>Edit Habit</h2>
+                      <v-text-field v-model="title" label="Title" data-vv-name="title" required></v-text-field>
+                      <v-text-field
+                        v-model="description"
+                        label="Description"
+                        data-vv-name="description"
+                        required
+                      ></v-text-field>
+                      <div class="my-2">
+                        <a @click.prevent="cancelEditing" href="#" class="card-link">Cancel</a>
+                        <a @click.prevent="updateHabit" href="#" class="card-link">Update</a>
+                        <!-- <v-btn color="error" dark large type="Save">Submit</v-btn> -->
+                      </div>
+                    </form>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
+            </div>
           </v-flex>
         </v-layout>
       </v-container>
     </v-content>
 
-    <v-footer app>
-      <span>&copy; 2019</span>
-    </v-footer>
+    <v-bottom-navigation dark shift fixed>
+      <v-btn>
+        <span>Video</span>
+        <v-icon>mdi-television-play</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Book</span>
+        <v-icon>mdi-book</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Image</span>
+        <v-icon>mdi-image</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 
